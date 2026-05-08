@@ -1,4 +1,3 @@
-
 name: CI
 
 on:
@@ -6,9 +5,11 @@ on:
     branches: ["main"]
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     steps:
+      - run: echo "🎉 Job triggered by ${{ github.event_name }} event."
+      - run: echo "🖥 Running on ${{ runner.os }} server hosted by GitHub!"
       - uses: actions/checkout@v3
       - name: Set-up Node
         uses: actions/setup-node@v1
@@ -16,5 +17,6 @@ jobs:
           node-version: 20.x
       - name: Install Dependencies
         run: npm install
-      - name: Lint
-        run: node_modules/eslint/bin/eslint.js -c eslint.config.js script.js
+      - name: Test
+        run: node_modules/.bin/mocha-headless-chrome -f test.html --args no-sandbox
+      - run: echo "🍏 Job status is ${{ job.status }}.
