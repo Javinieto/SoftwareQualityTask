@@ -137,23 +137,38 @@
     </div>
 
     <script src="converter.js"></script>
-    <script>
-        function convert() {
-            const raw = document.getElementById('numberInput').value;
-            const resultDiv = document.getElementById('result');
+<script>
+    function convert() {
+        const raw = document.getElementById('numberInput').value;
+        const resultDiv = document.getElementById('result');
 
-            try {
-                const n = Number(raw);
-                const roman = convertToRoman(n);
-                resultDiv.innerHTML = `<span class="roman">${roman}</span>`;
-            } catch (e) {
-                resultDiv.innerHTML = `<span class="error">${e.message}</span>`;
-            }
+        try {
+            const n = Number(raw);
+            const roman = convertToRoman(n);
+            resultDiv.innerHTML = `<span class="roman">${roman}</span>`;
+
+            // --- EVENTO DE ÉXITO ---
+            gtag('event', 'successful_conversion', {
+                'event_category': 'Conversion',
+                'mode': 'Integer to Roman',
+                'value_entered': n
+            });
+
+        } catch (e) {
+            resultDiv.innerHTML = `<span class="error">${e.message}</span>`;
+
+            // --- EVENTO DE ERROR ---
+            gtag('event', 'conversion_error', {
+                'event_category': 'User Error',
+                'error_type': e.message,
+                'raw_value': raw
+            });
         }
+    }
 
-        document.getElementById('numberInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') convert();
-        });
-    </script>
+    document.getElementById('numberInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') convert();
+    });
+</script>
 </body>
 </html>
